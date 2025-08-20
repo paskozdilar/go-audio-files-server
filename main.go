@@ -11,6 +11,16 @@ import (
 
 var Dir string
 
+var Supported = map[string]bool{
+	".aac":  true,
+	".flac": true,
+	".m4a":  true,
+	".mp3":  true,
+	".ogg":  true,
+	".opus": true,
+	".wav":  true,
+}
+
 type AudioFile struct {
 	Name string
 	Path string
@@ -30,23 +40,12 @@ func main() {
 func serveIndex(w http.ResponseWriter, r *http.Request) {
 	files := []AudioFile{}
 
-	supported := map[string]bool{
-		".mp3":  true,
-		".wav":  true,
-		".ogg":  true,
-		".aac":  true,
-		".m4a":  true,
-		".webm": true,
-		".opus": true,
-		".flac": true,
-	}
-
 	err := filepath.Walk(Dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 		ext := filepath.Ext(path)
-		if !info.IsDir() && supported[ext] {
+		if !info.IsDir() && Supported[ext] {
 			files = append(files, AudioFile{
 				Name: info.Name(),
 				Path: "/audio/" + info.Name(),
@@ -71,7 +70,7 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
             <div>
                 <p>{{.Name}}</p>
                 <audio controls style="width: 100%">
-                    <source src="{{.Path}}" type="audio/mpeg">
+                    <source src="{{.Path}}">
                     Your browser does not support the audio element.
                 </audio>
             </div>
