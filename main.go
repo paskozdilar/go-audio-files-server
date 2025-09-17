@@ -63,17 +63,32 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
     <html>
     <head>
         <title>Audio Player</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                margin: 20px;
+            }
+            details {
+                margin-bottom: 15px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding: 10px;
+            }
+            audio {
+                width: 100%;
+                padding-top: 10px;
+            }
+        </style>
     </head>
     <body>
         <h1>Audio Files</h1>
-        {{range .}}
-            <div>
-                <p>{{.Name}}</p>
-                <audio controls style="width: 100%">
-                    <source src="{{.Path}}">
-                    Your browser does not support the audio element.
-                </audio>
-            </div>
+        {{range .}} <details>
+            <summary>{{.Name}}</summary>
+            <audio controls>
+                <source src="{{.Path}}">
+                Your browser does not support the audio element.
+            </audio>
+        </details>
         {{end}}
     </body>
     </html>
